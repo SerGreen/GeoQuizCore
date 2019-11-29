@@ -7,9 +7,9 @@ Using .NET Core over classic .NET allowed me to host it on Heroku: https://sergr
 Application is localizable (currently supports EN and RU).  
 Note: UI is properly displayed only on screens 768+ pixels wide.
 
-![GeoQuiz main menu](http://i.imgur.com/v4CLlsP.png)
+![GeoQuiz main menu](https://i.imgur.com/q2S6dsL.png)
 
-![GeoQuiz flags game](http://i.imgur.com/lYjfcJe.png)
+![GeoQuiz flags game](https://i.imgur.com/4Juv7SL.png)
 
 
 # Technologies used
