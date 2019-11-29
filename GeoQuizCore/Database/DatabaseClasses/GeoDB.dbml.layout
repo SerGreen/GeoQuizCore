@@ -1,0 +1,45 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ordesignerObjectsDiagram dslVersion="1.0.0.0" absoluteBounds="0, 0, 11, 8.5" name="GeoDB">
+  <DataContextMoniker Name="/GeoDBDataContext" />
+  <nestedChildShapes>
+    <classShape Id="c6b206a8-581d-40e5-8a53-0e0a785a6965" absoluteBounds="0.5, 1, 2, 1.7708968098958331">
+      <DataClassMoniker Name="/GeoDBDataContext/Country" />
+      <nestedChildShapes>
+        <elementListCompartment Id="783bc5b9-d26b-43a0-810b-7cae393c0f07" absoluteBounds="0.51500000000000012, 1.46, 1.9700000000000002, 1.2108968098958333" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <classShape Id="fa0454b1-3c5c-40fa-869f-da032ed3fa46" absoluteBounds="3.625, 1, 2, 1.5785953776041666">
+      <DataClassMoniker Name="/GeoDBDataContext/FlagNeighbour" />
+      <nestedChildShapes>
+        <elementListCompartment Id="b720418b-00fb-4d84-aea5-2e927217792c" absoluteBounds="3.6399999999999997, 1.46, 1.9700000000000002, 1.0185953776041665" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <associationConnector edgePoints="[(2.5 : 1.78929768880208); (3.625 : 1.78929768880208)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+      <AssociationMoniker Name="/GeoDBDataContext/Country/Country_FlagNeighbour" />
+      <nodes>
+        <classShapeMoniker Id="c6b206a8-581d-40e5-8a53-0e0a785a6965" />
+        <classShapeMoniker Id="fa0454b1-3c5c-40fa-869f-da032ed3fa46" />
+      </nodes>
+    </associationConnector>
+    <associationConnector edgePoints="[(2.5 : 1.33214884440104); (3.625 : 1.33214884440104)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+      <AssociationMoniker Name="/GeoDBDataContext/Country/Country_FlagNeighbour1" />
+      <nodes>
+        <classShapeMoniker Id="c6b206a8-581d-40e5-8a53-0e0a785a6965" />
+        <classShapeMoniker Id="fa0454b1-3c5c-40fa-869f-da032ed3fa46" />
+      </nodes>
+    </associationConnector>
+    <classShape Id="03851bb3-e31f-4aa8-94e0-f4d9735600fd" absoluteBounds="0.5, 3.75, 2, 1.7708968098958331">
+      <DataClassMoniker Name="/GeoDBDataContext/Localization" />
+      <nestedChildShapes>
+        <elementListCompartment Id="5dcc47b3-3b40-4070-9b2d-34285c26563c" absoluteBounds="0.51500000000000012, 4.21, 1.9700000000000002, 1.2108968098958333" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <associationConnector edgePoints="[(1.5 : 2.77089680989583); (1.5 : 3.75)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+      <AssociationMoniker Name="/GeoDBDataContext/Country/Country_Localization" />
+      <nodes>
+        <classShapeMoniker Id="c6b206a8-581d-40e5-8a53-0e0a785a6965" />
+        <classShapeMoniker Id="03851bb3-e31f-4aa8-94e0-f4d9735600fd" />
+      </nodes>
+    </associationConnector>
+  </nestedChildShapes>
+</ordesignerObjectsDiagram>

@@ -1,0 +1,264 @@
+﻿@using GeoQuizCore.Models.Shared
+@model GeoQuizCore.Models.ResultsViewModel
+@using Microsoft.AspNetCore.Http
+@using Microsoft.AspNetCore.Mvc.Localization
+@using Microsoft.Extensions.Localization
+@inject IViewLocalizer Localizer
+@inject IStringLocalizer<SharedResources> Localization
+
+@{
+    ViewBag.Title = $"GeoQuiz : {Localization["results_title"]}";
+}
+
+<div class="col-xs-12 well">
+    <h1 class="text-center">@Localization["well_done"]</h1>
+    <hr />
+    <div class="row text-center">
+        <div class="col-xs-offset-3 col-xs-3">
+            <div id="percent-score" style="width:auto; height:auto; position:relative; margin:auto"></div>
+            <div class="result-text-big">@Localization["correct_answers"]</div>
+        </div>
+        <div class="col-xs-3">
+            <div id="points-score" style="width:auto; height:auto; position:relative; margin:auto"></div>
+            <div class="result-text-big">@Localization["score"]</div>
+        </div>
+    </div>
+    <div class="row" style="margin-top:40px">
+        <div class="center-div">
+            <ul id="rating-stars" class="c-rating"></ul>
+        </div>
+    </div>
+    <hr />
+    <div class="row text-center result-small-text">
+        <div class="col-xs-offset-2 col-xs-2">
+            <div id="wrong-streak" style="width:auto; height:auto; position:relative; margin:auto"></div>
+            @Localization["longest_streak"]
+        </div>
+        <div class="col-xs-2">
+            <div id="wrong-result" style="width:auto; height:auto; position:relative; margin:auto"></div>
+            @Localization["wrong"]
+        </div>
+        <div class="col-xs-2">
+            <div id="correct-result" style="width:auto; height:auto; position:relative; margin:auto"></div>
+            @Localization["correct"]
+        </div>
+        <div class="col-xs-2">
+            <div id="correct-streak" style="width:auto; height:auto; position:relative; margin:auto"></div>
+            @Localization["longest_streak"]
+        </div>
+    </div>
+    <hr />
+    <h3 class="text-center text-muted">@(Model.GameSettings.GameMode == GameMode.FlagByCountry ? Localization["game_mode_flags"] : Model.GameSettings.GameMode == GameMode.CountryByFlag ? Localization["game_mode_countries"] : Localization["game_mode_capitals"])</h3>
+    <div class="row">
+        <div class="col-xs-offset-2 col-sm-offset-3 col-xs-8 col-sm-6 result-small-text center-ul">
+            <ul class="text-muted">
+                <li>@Html.GetContinentsList(Model.GameSettings.Continents)</li>
+            </ul>
+            <ul style="columns:2" class="text-muted">
+                <li>@(Model.GameSettings.TimeLimit == 0 ? Localization["unlimited_time"] : $"{Localization["time_limit"]}: {Model.GameSettings.TimeLimit} {Localization["seconds"]}")</li>
+                <li>@Localization["difficulty"]: @Html.GetDificultyString(Model.GameSettings.Difficulty)</li>
+                <li>@Localization["answer_options"]: @(Model.GameSettings.DistractorsAmount > 0 ? (Model.GameSettings.DistractorsAmount + 1).ToString() : Localization["distractors_none"])</li>
+                <li>@Localization["questions_total"]: @Model.Questions.Count</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+@if (Model.Questions.CorrectAnswersPercent == 1)
+{
+    <canvas height='1' id='confetti' width='1'></canvas>
+    <script defer src="~/js/confetti.js" type="text/javascript"></script>
+}
+
+<!-- Stats initialization scripts -->
+<script>
+    $(document).ready(function () {
+        var animationLength = 2000;
+        var animationShortLength = 100;
+        var percentCircle;
+        var scoreCircle;
+        var wrongStreak;
+        var wrongAnswers;
+        var correctStreak;
+        var correctAnswers;
+        var stars;
+
+        var correctAnswerPercent = @Model.Questions.CorrectAnswersPercent.ToString().Replace(',', '.');
+        var starRating;
+        if (correctAnswerPercent >= 0.9)
+            starRating = 5;
+        else if (correctAnswerPercent >= 0.7)
+            starRating = 4;
+        else if (correctAnswerPercent >= 0.45)
+            starRating = 3;
+        else if (correctAnswerPercent >= 0.25)
+            starRating = 2;
+        else
+            starRating = 1;
+
+        // Rating stars
+        var target = document.querySelector('#rating-stars');
+        stars = rating(target, 0, 5, function (rating) {
+            if (rating < starRating)
+                setTimeout(function () { stars.setRating(rating + 1); }, 350);
+            else {
+                // If results are flawless, then throw confetti \o/
+                if (correctAnswerPercent == 1) {
+                    // don't throw confetti, my adblock gets triggered by them and blocks them anyway
+                    //confetti.start();
+                    rotateStars();
+                }
+
+                // Animate small gauges
+                setTimeout(function () {
+                    wrongStreak.animate(1.0, null, function () {
+                        wrongAnswers.animate(1 - correctAnswerPercent, null, function () {
+                            correctAnswers.animate(correctAnswerPercent, null, function () {
+                                correctStreak.animate(1.0);
+                            });
+                        });
+                    });
+                }, 500);
+            }
+        });
+
+        // Percent
+        percentCircle = new ProgressBar.Circle('#percent-score', {
+            color: '#666',
+            strokeWidth: 6,
+            trailWidth: 6,
+            duration: animationLength * correctAnswerPercent,
+            text: {
+                className: 'result-percent',
+                autoStyleContainer: false
+            },
+            from: { color: '#F44336' },
+            to: { color: '#4CAF50' },
+
+            step: function (state, circle) {
+                var value = Math.round(circle.value() * 100);
+                circle.setText(value + '%');
+
+                circle.path.setAttribute('stroke', state.color);
+                circle.text.style.color = state.color;
+            }
+        });
+
+        // Score
+        scoreCircle = new ProgressBar.Circle('#points-score', {
+            color: '#FFC107',
+            strokeWidth: 6,
+            trailWidth: 6,
+            duration: animationLength,
+            text: {
+                className: 'result-score',
+                autoStyleContainer: false
+            },
+
+            step: function (state, circle) {
+                var value = Math.round(circle.value() * @Model.Questions.Score);
+                circle.setText(value);
+            }
+        });
+        $(scoreCircle.text).css('color', '#666');
+
+        // Wrong streak
+        wrongStreak = new ProgressBar.SemiCircle('#wrong-streak', {
+            strokeWidth: 6,
+            color: '#F44336',
+            trailColor: '#eee',
+            trailWidth: 6,
+            easing: 'easeInOut',
+            duration: animationShortLength,
+            svgStyle: null,
+            text: {
+                className: 'result-small-gauge-text',
+                value: '',
+                alignToBottom: true
+            },
+            step: (state, bar) => {
+                var value = Math.round(bar.value() * @Model.Questions.LongestWrongStreak);
+                bar.setText(value);
+            }
+        });
+
+        // Wrong answers
+        wrongAnswers = new ProgressBar.SemiCircle('#wrong-result', {
+            strokeWidth: 6,
+            color: '#F44336',
+            trailColor: '#eee',
+            trailWidth: 6,
+            easing: 'easeInOut',
+            duration: animationShortLength,
+            svgStyle: null,
+            text: {
+                className: 'result-small-gauge-text',
+                value: '',
+                alignToBottom: true
+            },
+            step: (state, bar) => {
+                var value = Math.round(bar.value() * @Model.Questions.Count);
+                bar.setText(value);
+            }
+        });
+
+        // Correct streak
+        correctStreak = new ProgressBar.SemiCircle('#correct-streak', {
+            strokeWidth: 6,
+            color: '#4CAF50',
+            trailColor: '#eee',
+            trailWidth: 6,
+            easing: 'easeInOut',
+            duration: animationShortLength,
+            svgStyle: null,
+            text: {
+                className: 'result-small-gauge-text',
+                value: '',
+                alignToBottom: true
+            },
+            step: (state, bar) => {
+                var value = Math.round(bar.value() * @Model.Questions.LongestCorrectStreak);
+                bar.setText(value);
+            }
+        });
+
+        // Correct answers
+        correctAnswers = new ProgressBar.SemiCircle('#correct-result', {
+            strokeWidth: 6,
+            color: '#4CAF50',
+            trailColor: '#eee',
+            trailWidth: 6,
+            easing: 'easeInOut',
+            duration: animationShortLength,
+            svgStyle: null,
+            text: {
+                className: 'result-small-gauge-text',
+                value: '',
+                alignToBottom: true
+            },
+            step: (state, bar) => {
+                var value = Math.round(bar.value() * @Model.Questions.Count);
+                bar.setText(value);
+            }
+        });
+
+        // Animate stats
+        scoreCircle.animate(1.0);
+        percentCircle.animate(correctAnswerPercent, null, function () {
+            setTimeout(function () { stars.setRating(1); }, 600);
+        });
+
+        // Rotate stars
+        function rotateStars() {
+            var delay = 0;
+            $('#rating-stars li').each(function() {
+                rotateThis(this, delay);
+                delay += 200;
+            });
+
+            function rotateThis(star, delay) {
+                setTimeout(function() { $(star).addClass('rotate') }, delay);
+            }
+        }
+    });
+</script>

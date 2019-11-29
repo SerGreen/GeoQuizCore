@@ -1,0 +1,341 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="africa" xml:space="preserve">
+    <value>Африка</value>
+    <comment>MENU / INDEX</comment>
+  </data>
+  <data name="answer_options" xml:space="preserve">
+    <value>Вариантов ответов</value>
+    <comment>MENU / INDEX</comment>
+  </data>
+  <data name="asia" xml:space="preserve">
+    <value>Азия</value>
+    <comment>MENU / INDEX</comment>
+  </data>
+  <data name="australia" xml:space="preserve">
+    <value>Австралия и Океания</value>
+    <comment>MENU / INDEX</comment>
+  </data>
+  <data name="continents" xml:space="preserve">
+    <value>Континенты</value>
+    <comment>MENU / INDEX</comment>
+  </data>
+  <data name="correct" xml:space="preserve">
+    <value>Правильно</value>
+    <comment>RESULTS</comment>
+  </data>
+  <data name="correct_answers" xml:space="preserve">
+    <value>Правильные ответы</value>
+    <comment>QUIZ + RESULTS</comment>
+  </data>
+  <data name="deselect_all_btn" xml:space="preserve">
+    <value>Убрать все</value>
+    <comment>MENU / INDEX / MODAL</comment>
+  </data>
+  <data name="difficulty" xml:space="preserve">
+    <value>Сложность</value>
+    <comment>MENU / INDEX</comment>
+  </data>
+  <data name="difficulty_easy" xml:space="preserve">
+    <value>легко</value>
+    <comment>RESULTS</comment>
+  </data>
+  <data name="difficulty_hard" xml:space="preserve">
+    <value>сложно</value>
+    <comment>RESULTS</comment>
+  </data>
+  <data name="difficulty_medium" xml:space="preserve">
+    <value>средне</value>
+    <comment>RESULTS</comment>
+  </data>
+  <data name="difficulty_very_hard" xml:space="preserve">
+    <value>очень сложно</value>
+    <comment>RESULTS</comment>
+  </data>
+  <data name="distractors_none" xml:space="preserve">
+    <value>нет</value>
+    <comment>RESULTS</comment>
+  </data>
+  <data name="enter_capital_of" xml:space="preserve">
+    <value>Введите столицу страны:</value>
+    <comment>QUIZ / CAPITALS</comment>
+  </data>
+  <data name="europe" xml:space="preserve">
+    <value>Европа</value>
+    <comment>MENU / INDEX</comment>
+  </data>
+  <data name="game_mode_btn_capitals" xml:space="preserve">
+    <value>Столицы</value>
+    <comment>MENU / INDEX</comment>
+  </data>
+  <data name="game_mode_btn_countries" xml:space="preserve">
+    <value>Страны</value>
+    <comment>MENU / INDEX</comment>
+  </data>
+  <data name="game_mode_btn_flags" xml:space="preserve">
+    <value>Флаги</value>
+    <comment>MENU / INDEX</comment>
+  </data>
+  <data name="game_mode_capitals" xml:space="preserve">
+    <value>Игровой режим: Столицы</value>
+    <comment>RESULTS</comment>
+  </data>
+  <data name="game_mode_countries" xml:space="preserve">
+    <value>Игровой режим: Страны</value>
+    <comment>RESULTS</comment>
+  </data>
+  <data name="game_mode_flags" xml:space="preserve">
+    <value>Игровой режим: Флаги</value>
+    <comment>RESULTS</comment>
+  </data>
+  <data name="loading" xml:space="preserve">
+    <value>Загрузка...</value>
+    <comment>QUIZ</comment>
+  </data>
+  <data name="longest_streak" xml:space="preserve">
+    <value>Максимум подряд</value>
+    <comment>RESULTS</comment>
+  </data>
+  <data name="mistake_timeout" xml:space="preserve">
+    <value>Время вышло!</value>
+    <comment>QUIZ / ALL</comment>
+  </data>
+  <data name="mistake_wrong_capital" xml:space="preserve">
+    <value>Неправильно! Правильный ответ был:</value>
+    <comment>QUIZ / CAPITALS</comment>
+  </data>
+  <data name="mistake_wrong_country" xml:space="preserve">
+    <value>Неправильно! Это был флаг:</value>
+    <comment>QUIZ / COUNTRIES</comment>
+  </data>
+  <data name="mistake_wrong_flag" xml:space="preserve">
+    <value>Неправильно! Это был флаг:</value>
+    <comment>QUIZ / FLAGS</comment>
+  </data>
+  <data name="non_sovereign_btn" xml:space="preserve">
+    <value>Настроить непризнанные государства</value>
+    <comment>MENU / INDEX</comment>
+  </data>
+  <data name="non_sovereign_modal_caption" xml:space="preserve">
+    <value>Включённые непризнанные государства</value>
+    <comment>MENU / INDEX / MODAL</comment>
+  </data>
+  <data name="north_america" xml:space="preserve">
+    <value>Северная Америка</value>
+    <comment>MENU / INDEX</comment>
+  </data>
+  <data name="north_and_south_americas" xml:space="preserve">
+    <value>Северная и Южная Америка</value>
+    <comment>RESULTS</comment>
+  </data>
+  <data name="questions_total" xml:space="preserve">
+    <value>Всего вопросов</value>
+    <comment>RESULTS</comment>
+  </data>
+  <data name="question_num" xml:space="preserve">
+    <value>Вопрос</value>
+    <comment>QUIZ</comment>
+  </data>
+  <data name="results_title" xml:space="preserve">
+    <value>Результаты</value>
+    <comment>RESULTS</comment>
+  </data>
+  <data name="score" xml:space="preserve">
+    <value>Счёт</value>
+    <comment>QUIZ</comment>
+  </data>
+  <data name="seconds" xml:space="preserve">
+    <value>сек</value>
+    <comment>RESULTS</comment>
+  </data>
+  <data name="select_all_btn" xml:space="preserve">
+    <value>Выбрать все</value>
+    <comment>MENU / INDEX / MODAL</comment>
+  </data>
+  <data name="select_capital_of" xml:space="preserve">
+    <value>Выберите столицу страны:</value>
+    <comment>QUIZ / CAPITALS</comment>
+  </data>
+  <data name="select_country_of" xml:space="preserve">
+    <value>Какой стране принадлежит этот флаг?</value>
+    <comment>QUIZ / COUNTRIES</comment>
+  </data>
+  <data name="select_flag_of" xml:space="preserve">
+    <value>Выберите флаг страны:</value>
+    <comment>QUIZ / FLAGS</comment>
+  </data>
+  <data name="south_america" xml:space="preserve">
+    <value>Южная Америка</value>
+    <comment>MENU / INDEX</comment>
+  </data>
+  <data name="start_btn" xml:space="preserve">
+    <value>Старт!</value>
+    <comment>MENU / INDEX</comment>
+  </data>
+  <data name="start_new_game" xml:space="preserve">
+    <value>Начать новую игру</value>
+    <comment>MENU / INDEX</comment>
+  </data>
+  <data name="streak" xml:space="preserve">
+    <value>Подряд правильных</value>
+    <comment>QUIZ</comment>
+  </data>
+  <data name="time_left" xml:space="preserve">
+    <value>Осталось времени</value>
+    <comment>QUIZ</comment>
+  </data>
+  <data name="time_limit" xml:space="preserve">
+    <value>Лимит времени</value>
+    <comment>MENU / INDEX</comment>
+  </data>
+  <data name="type_here_hint" xml:space="preserve">
+    <value>Введите свой ответ</value>
+    <comment>QUIZ / COUN. + CAPIT.</comment>
+  </data>
+  <data name="unlimited_time" xml:space="preserve">
+    <value>Неограниченное время</value>
+    <comment>RESULTS</comment>
+  </data>
+  <data name="well_done" xml:space="preserve">
+    <value>Отлично!</value>
+    <comment>RESULTS</comment>
+  </data>
+  <data name="whole_world" xml:space="preserve">
+    <value>🌍 Весь мир</value>
+    <comment>RESULTS</comment>
+  </data>
+  <data name="wrong" xml:space="preserve">
+    <value>Неправильно</value>
+    <comment>RESULTS</comment>
+  </data>
+  <data name="wrong_answers" xml:space="preserve">
+    <value>Неправильные ответы</value>
+    <comment>QUIZ + RESULTS</comment>
+  </data>
+  <data name="answer_options_br" xml:space="preserve">
+    <value>Вариантов {0}ответов</value>
+  </data>
+  <data name="difficulty_br" xml:space="preserve">
+    <value>Сложность{0}&amp;nbsp;</value>
+  </data>
+  <data name="time_limit_br" xml:space="preserve">
+    <value>Лимит {0}времени</value>
+  </data>
+</root>

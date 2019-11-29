@@ -1,0 +1,286 @@
+﻿@model GeoQuizCore.Models.QuestionViewModel
+@using Microsoft.AspNetCore.Http
+@using Microsoft.AspNetCore.Mvc.Localization
+@using Microsoft.Extensions.Localization
+@inject IViewLocalizer Localizer
+@inject IStringLocalizer<SharedResources> Localization
+
+@{
+    ViewBag.Title = "GeoQuiz";
+}
+
+<!-- Progress bar initialization script -->
+<script>
+    var bar;
+
+    $(document).ready(function () {
+        bar = new ProgressBar.Line('#progressbar', {
+            strokeWidth: 4,
+            easing: 'easeInOut',
+            duration: 400,
+            color: '#009688',
+            trailColor: '#ccc',
+            trailWidth: 1,
+            svgStyle: { width: '80%', height: '100%' }
+        });
+
+        bar.animate((@Model.Index + 1) / @Model.TotalQuestionsCount);  // Number from 0.0 to 1.0
+    });
+</script>
+
+<!-- Timer initialization script -->
+<script>
+    var timer;
+
+    $(document).ready(function () {
+        timer = new ProgressBar.Circle('#timer', {
+            color: '#666',
+            strokeWidth: 6,
+            trailWidth: 6,
+            duration: @(Model.TimeLimit * 1000),
+            text: {
+                className: '@(Model.TimeLimit == 0 ? "timer-infinity" : "timer-text")',
+                autoStyleContainer: false
+            },
+            from: { color: '#F44336' },
+            to: { color: '#666' },
+
+            step: function(state, circle) {
+                circle.path.setAttribute('stroke', state.color);
+
+                var value = Math.round(circle.value() * @Model.TimeLimit);
+                circle.setText(value);
+                circle.text.style.color = state.color;
+            }
+        });
+
+        timer.set(1.0)
+
+        if(@Model.TimeLimit == 0)
+            $(timer.text).text('∞');
+        else
+            timer.animate(0.0, null, function () {
+                submitAnswerAjax(@Model.Index, null);
+            });
+    });
+</script>
+
+<div class="equal-height-children">
+    <!-- LEFT WELL -->
+    <div class="col-xs-3 col-md-2 well">
+        <div class="text-center">
+            <div class="row" style="font-size:large">
+                @Localization["question_num"] <span id="current-question-index">@(Model.Index + 1)</span> / @Model.TotalQuestionsCount
+                <div id="progressbar" style="width:100%; height:8px;"></div>
+            </div>
+            <hr />
+            <div class="row">
+                <div class="numberCircle" style="margin:auto; border-color:#4CAF50"><span id="correct-answers">@Model.CorrectAnswers</span></div>
+                @Localization["correct_answers"]
+            </div>
+            <hr />
+            <div class="row">
+                <div class="numberCircle" style="margin:auto; border-color:#F44336"><span id="wrong-answers">@Model.WrongAnswers</span></div>
+                @Localization["wrong_answers"]
+            </div>
+        </div>
+    </div>
+
+    <!-- MIDDLE WELL -->
+    <div id="question-container" class="col-md-offset-1 col-xs-6 col-md-6 well" style="z-index:1">
+        @switch (Model.GameMode)
+        {
+            case GeoQuizCore.Models.Shared.GameMode.FlagByCountry:
+                Html.RenderPartial("PartialFlagByCountry", Model);
+                break;
+            case GeoQuizCore.Models.Shared.GameMode.CountryByFlag:
+                Html.RenderPartial("PartialCountryByFlag", Model);
+                break;
+            case GeoQuizCore.Models.Shared.GameMode.CapitalByCountry:
+                Html.RenderPartial("PartialCapitalByCountry", Model);
+                break;
+        }
+    </div>
+
+    <!-- RIGHT WELL -->
+    <div class="col-md-offset-1 col-xs-3 col-md-2 well text-center">
+        <div class="row">
+            <div id="timer" style="width:68px; height:68px; position:relative; margin:auto"></div>
+            @Localization["time_left"]
+        </div>
+        <hr />
+        <div class="row" style="position:initial">
+            <div id="reward-tag">+<span>@Model.PointsReward</span></div>
+            <div id="score">@Model.Score</div>
+            @Localization["score"]
+        </div>
+        <hr />
+        <div class="row">
+            <div id="streak" style="transform:rotateX(90deg)">
+                ×<span>0</span>
+                <div>@Localization["streak"]</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- AJAX submit answer function. It is used by Partial Views in Middle Well. It returns partial view with new question's HTML code. -->
+<script>
+    function submitAnswerAjax(questionIndex, answer) {
+            // Stop timer
+            timer.stop();
+
+            // Get potential score points reward value
+            var reward = $('#reward').text();
+
+            // Send request
+            var data = {
+            questionIndex: questionIndex,
+            answer: answer
+        };
+
+        $.ajax({
+            type: 'POST',
+            data: data,
+            url: '@Url.Action(nameof(QuizController.Quiz), QuizController.Nameof)',
+            error: function (xhr, status, error) {
+                if (xhr.getResponseHeader('content-type').indexOf('text/html') >= 0) {
+                    var w = window.open();
+                    $(w.document.body).html(xhr.responseText);
+                }
+                alert("OwO i did a fucky wucky\n" + xhr.status + ': ' + error);
+            },
+            success: function (result) {
+                // Display new question
+                $("#question-container").html(result);
+
+                // jQuery can't find anything if result is not inside <div>
+                result = '<div>' + result + '</div>';
+
+                // Update progress bar and counters
+                var current = $('#questionIndex', result).text();
+                var correct = $('#correctAnswers', result).text();
+                var wrong = $('#wrongAnswers', result).text();
+                var streak = $('#correctStreak', result).text();
+
+                bar.animate((parseInt(current) + 1) / @Model.TotalQuestionsCount);
+                $('#current-question-index').text(parseInt(current) + 1);
+                $('#correct-answers').text(correct);
+                $('#wrong-answers').text(wrong);
+
+                $('#streak').find('span').text(streak);
+                $('#reward-tag').find('span').text(reward);
+
+                // If there was mistake, div with id="mistake" is generated
+                if ($('#mistake', result).length) {
+                    // Make number of wrong answers jump
+                    $('#wrong-answers').css('font-size', '42px');
+                    setTimeout(function () { $('#wrong-answers').css('font-size', ''); }, 150);
+
+                    // Hide streak counter
+                    $('#streak').css('transform', 'rotateX(90deg)');
+
+                    // Display snackbar
+                    var options = {
+                        content: $('#mistake', result).text(),
+                        timeout: 5000
+                    }
+                    $.snackbar(options);
+                }
+                // If no mistake
+                else {
+                    // Make number of correct answers and streak counter jump
+                    $('#correct-answers').css('font-size', '42px');
+                    setTimeout(function () { $('#correct-answers').css('font-size', ''); }, 150);
+
+                    if(streak > 1)
+                    {
+                        $('#streak').css('transform', 'rotateX(0deg)');
+                        $('#streak').css('font-size', '48px');
+                        setTimeout(function () { $('#streak').css('font-size', ''); }, 150);
+                    }
+
+                    // Add points to score
+                    animateScore(parseInt(reward));
+                }
+
+                // If game is over => wait 3 seconds and reirect to results page
+                if ($('#game-over', result).length) {
+                    setTimeout(function() { window.location.href = '@Url.Action(nameof(QuizController.Results), new { lang = Context.Session.GetString("Language") })'; }, 2000);
+
+                    // Display loading animation
+                    loading = new ProgressBar.Circle('#loading', {
+                        strokeWidth: 6,
+                        trailWidth: 6,
+                        color: '#eee',
+                        trailColor: '#bbb',
+                        text: {
+                            value: '@Localization["loading"]'
+                        }
+                    });
+                    $(loading.text).css('color', '#bbb');
+                    loading.set(0.8);
+                    $('#loading').css('opacity', '1');
+                    $('#loading svg').css('transition', 'all 8s linear').css('transform', 'rotate(360deg)');
+                }
+                // Reset timer
+                else if(@Model.TimeLimit > 0)
+                {
+                    timer.set(1.0);
+                    timer.animate(0.0, null, function () {
+                        submitAnswerAjax(@Model.Index, null);
+                    });
+                }
+
+                hookEnterToSubmitAnswer();
+            }
+        });
+    }
+
+    function submitAnswerBtnClick() {
+        var answer = $('#answer-input').val();
+        if(answer.length > 0)
+            submitAnswerAjax(@Model.Index, answer);
+    }
+
+    // Hook enter key to submit answer click in type-in mode
+    function hookEnterToSubmitAnswer() {
+        $("#answer-input").keyup(function (event) {
+            if (event.keyCode == 13) {
+                $("#submit-answer-btn").click();
+            }
+        }).focus();
+    }
+    hookEnterToSubmitAnswer();
+</script>
+
+<!-- Score animation script -->
+<script>
+    var score = parseInt($('#score').text());
+
+    function animateScore(x){
+        $({score: 0}).animate({score: x},{
+            duration: 1000,
+            easing:"linear",
+            step: function(now, fx){
+                $("#score").html(score + Math.floor(now));
+            },
+            queue:false,
+            complete: function(now, fx){
+                score += x;
+            }
+        });
+        $("#reward-tag").fadeIn({
+            duration:300,
+            step:function(now, fx){
+                $(this).css("top", -20 * now  +"px");
+            }
+        }).fadeOut({
+            duration:300,
+            easing:"linear",
+            step:function(now, fx){
+                $(this).css("top", -20 * ( 2 - now) + "px");
+            }
+        });
+    }
+</script>

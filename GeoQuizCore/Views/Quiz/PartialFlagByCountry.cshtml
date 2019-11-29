@@ -1,0 +1,65 @@
+﻿@model GeoQuizCore.Models.QuestionViewModel
+@using Microsoft.AspNetCore.Http
+@using Microsoft.AspNetCore.Mvc.Localization
+@using Microsoft.Extensions.Localization
+@inject IViewLocalizer Localizer
+@inject IStringLocalizer<SharedResources> Localization
+
+@{
+    string mistakeText = null;
+    string mistake = TempData["Mistake"] as string;
+    if (mistake != null)
+    {
+        mistakeText = mistake == "Timeout"
+            ? Localization["mistake_timeout"]
+            : Localization["mistake_wrong_flag"] + $" {mistake}";
+    }
+
+    double columns = 0, rows = 0;
+    int currentChoice = 0;
+
+    if (Model.Question != null)
+    {
+        // Caclulate grid size for answer choices
+        double sqrt = Math.Sqrt(Model.Question.Choices.Length);
+        columns = Math.Ceiling(sqrt);
+        rows = Math.Ceiling(Model.Question.Choices.Length / columns);
+    }
+
+    bool gameOver = Model.Index >= Model.TotalQuestionsCount;
+}
+
+@if (!gameOver)
+{
+    <h2 class="text-center">@Localization["select_flag_of"] <span style="font-weight:bolder">@Model.Question.QuestionString</span></h2>
+    <hr />
+
+    <div>
+        @for (int i = 0; i < rows; i++)
+        {
+            <div class="row text-center">
+                @for (int j = 0; j < columns && currentChoice < Model.Question.Choices.Length; j++, currentChoice++)
+                {
+                    <div class="col-xs-@(12 / columns) hover-highlight answer-option">
+                        <input onclick="submitAnswerAjax(@Model.Index, @Model.Question.Choices[currentChoice])" class="img-thumbnail" type="image" src="~/images/Flags/@(Model.Question.Choices[currentChoice]).png" name="submit" />
+                    </div>
+                }
+            </div>
+        }
+    </div>
+}
+else
+{
+    <div class="vcenter-parent"><div id="loading" class="col-xs-offset-4 col-xs-4 vcenter-this" style="transition:all 1s linear;opacity:0"></div></div>
+    <div hidden id="game-over"></div>
+}
+
+<div hidden id="questionIndex">@(gameOver ? Model.Index - 1 : Model.Index)</div>
+<div hidden id="correctAnswers">@Model.CorrectAnswers</div>
+<div hidden id="wrongAnswers">@Model.WrongAnswers</div>
+<div hidden id="correctStreak">@Model.CorrectStreak</div>
+<div hidden id="reward">@Model.PointsReward</div>
+@if (mistakeText != null)
+{
+    <div hidden id="mistake">@mistakeText</div>
+}

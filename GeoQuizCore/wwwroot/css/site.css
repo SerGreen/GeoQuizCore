@@ -1,0 +1,408 @@
+﻿/* Footer always at bottom and spacing above navbar */
+body {
+    padding-top: 50px;
+    margin: 0;
+    padding-bottom: 4rem;
+    position:relative;
+    min-height: 100%;
+}
+footer {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    padding: 1rem;
+    text-align: center;
+}
+html {
+  height: 100%;
+  box-sizing: border-box;
+}
+*,
+*:before,
+*:after {
+  box-sizing: inherit;
+}
+
+/* Set padding to keep content from hitting the edges */
+.body-content {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+/* Vertically centered div */
+.center-div {
+    display: table;
+    margin: 0 auto;
+}
+.vcenter-parent {
+  -webkit-transform-style: preserve-3d;
+  -moz-transform-style: preserve-3d;
+  transform-style: preserve-3d;
+  height: 100%;
+}
+.vcenter-this {
+  position: relative;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+/* Vertical divider between col- blocks */
+.row.vdivide [class*='col-']:not(:last-child):after {
+  background: #e0e0e0;
+  width: 1px;
+  content: "";
+  display:block;
+  position: absolute;
+  top:0;
+  bottom: 0;
+  right: 0;
+  
+}
+
+/* Equal height for children inside div */
+div.equal-height-children {
+    display: flex;
+}
+
+/* Counters of correct and wrong answers */
+.numberCircle {
+    border-radius: 50%;
+    width: 68px;
+    font-size: 32px;
+    border: 4px solid #666;
+}
+.numberCircle span {
+    text-align: center;
+    line-height: 60px;
+    display: block;
+    color: #666;
+    transition: all 150ms;
+}
+
+/* Styling for timer */
+.timer-text {
+    font-size: xx-large;
+}
+.timer-infinity {
+    font-size: 400%;
+}
+
+/* Answer options styling */
+.hover-highlight {
+    transition: all 200ms;
+}
+.hover-highlight:hover {
+    background-color: #EEE;
+    transition: all 200ms;
+}
+.answer-option {
+    margin: 16px 0px;
+    padding: 8px 5px 5px;
+}
+/* Text answers (Countries and Capitals) */
+.answer-option-row {
+    width: 100%;
+    margin: 0px 0px;
+}
+.answer-option-text {
+    padding: 20px 5px;
+    font-size: x-large;
+    border: 1px solid #eee;
+    border-radius: 2px;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+}
+.answer-option-text-outer {
+    margin: 0px 0px;
+    padding: 8px 8px;
+}
+.answer-option-text:hover {
+    color: #009688;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+/* Style for score counter in game */
+#score {
+  font-size: 3em;
+  margin-top: -10px;
+}
+#reward-tag {
+  transform-style: preserve-3d;
+  position: absolute;
+  display: none;
+  top: -20px;
+  left: 50%;
+  transform: translateX(-50%) translateY(820%);
+  font-size: 1em;
+}
+#streak {
+    font-size: 42px;
+    font-weight: bolder;
+    color: #ffc107;
+    transition: all 150ms;
+    text-anchor: middle;
+    margin-top: -10px;
+}
+#streak span {
+    transition: all 150ms;
+}
+#streak div {
+    color: initial;
+    font-size: 33%;
+    font-weight: 300;
+}
+
+/* Style for results screen */
+.result-percent {
+    font-size: 400%;
+    font-weight: 500;
+}
+.result-score {
+    font-size: 300%;
+    font-weight: 500;
+}
+.result-text-big {
+    margin-top: 0.5em;
+    font-size: large;
+    font-weight: normal;
+}
+.result-small-text {
+    font-size: larger;
+}
+.result-small-gauge-text {
+    font-size: xx-large;
+}
+
+.center-ul {
+    text-align: center;
+}
+.center-ul ul {
+    list-style: none;
+    padding-left: 0px;
+}
+
+/* Continuous rotation */
+.rotate {
+    animation-name: rotate; 
+    animation-duration: 2s; 
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+}
+@keyframes rotate {
+    from {transform: rotateY(0deg);}
+    to {transform: rotateY(360deg);}
+}
+
+/* Modal centered vertically */
+.modal {
+  text-align: center;
+}
+@media screen and (min-width: 768px) { 
+  .modal:before {
+    display: inline-block;
+    vertical-align: middle;
+    content: " ";
+    height: 100%;
+  }
+}
+.modal-dialog {
+  display: inline-block;
+  text-align: left;
+  vertical-align: middle;
+  width: 50%;
+  min-width: 768px;
+}
+
+/* Color fix for checkbox and toggle button */
+.checkbox label,
+.togglebutton label {
+    color: #333;
+}
+
+/* Font size fix for infinity and others */
+.bigger-symbol {
+    font-size: 28px;
+    margin: -10px
+}
+
+/* Radio-button group as regular buttons */
+.radio-button-group .btn {
+    width: 20%;
+    padding: 4px 10px;
+    text-transform: initial;
+    border-radius: 0px;
+}
+.radio-button-group .btn:first-child {
+    border-radius: 2px 0px 0px 2px;
+}
+.radio-button-group .btn:last-child {
+    border-radius: 0px 2px 2px 0px;
+}
+.radio-button-group .btn span {
+    display: inline-flex;
+}
+
+/* Start and Game mode buttons */
+.combined-button button:first-child {
+    margin-bottom: 0px;
+    padding: 20px;
+    width: 100%;
+    border-radius: 2px 2px 0px 0px;
+    font-size:xx-large;
+}
+.combined-button div {
+    margin-top: 0px;
+}
+.combined-button div label:last-child {
+    transform:scaleX(0.995); /* ПИКСЕЛЬ ПЁРФЕКТ СУКА (ёбанное окр ;__;) */
+}
+.combined-button div .btn {
+    border-radius: 0px 0px 0px 0px;
+}
+.combined-button div .btn:last-child {
+    border-radius: 0px 0px 2px 0px;
+}
+.combined-button div .btn:first-child {
+    border-radius: 0px 0px 0px 2px;
+}
+#start-button span {
+    visibility: hidden;
+    opacity: 0;
+    transition: all 300ms;
+}
+#start-button:hover span {
+    visibility: visible;
+    opacity: 1;
+    transition: all 300ms;
+}
+
+.noselect {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    cursor: default;
+}
+
+/* Selection color */
+::-moz-selection {
+    background: rgba(0, 150, 136, 0.15);
+}
+::selection {
+    background: rgba(0, 150, 136, 0.15);
+    color: #FFF;
+}
+
+/* Select/deselect all buttons */
+.non-sovereign-col {
+    padding-bottom: 40px;
+}
+.bottomaligned {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 75%;
+    margin-bottom: 7px;
+}
+
+/* Language selector */
+#language-button-container {
+    float: right;
+    margin-right: 19px;
+}
+.language-box {
+    position: absolute;
+    display: inline-flex;
+    padding: 0 0px;
+    margin-left: 50%;
+    margin-top: 100%;
+    transform: translateX(-50%) rotateY(90deg);
+    z-index: 1;
+    transition: all 0.13s linear;
+}
+.language-box a img {
+    width: 32px;
+    margin: 0 4px;
+    border: 1px solid #ddd;
+    border-radius: 2px;
+}
+.language-box a:first-child img {
+    margin-left: 0;
+}
+.language-box a:last-child img {
+    margin-right: 0;
+}
+#language-button {
+    margin: 10px 5px;
+    padding: 10px;
+    border-radius: 50%;
+    transition: all 0.26s linear;
+    transform: rotateY(0deg);
+}
+
+/* GitHub ribbon */
+#forkongithub {
+    pointer-events: none
+}
+#forkongithub a {
+    background: #000;
+    color: #fff;
+    text-decoration: none;
+    font-family: arial,sans-serif;
+    text-align: center;
+    font-weight: bold;
+    padding: 5px 40px;
+    font-size: 1.2rem;
+    line-height: 2rem;
+    position: relative;
+    transition: 0.5s;
+    pointer-events: auto
+}
+#forkongithub a:hover {
+    background: #c11;
+    color: #fff;
+}
+#forkongithub a::before, 
+#forkongithub a::after {
+    content: "";
+    width: 100%;
+    display: block;
+    position: absolute;
+    top: 1px;
+    left: 0;
+    height: 1px;
+    background: #fff;
+}
+#forkongithub a::after {
+    bottom: 1px;
+    top: auto;
+}
+@media screen and (min-width:768px) {
+    #forkongithub {
+        position: absolute;
+        display: block;
+        top: 0;
+        left: 0;
+        width: 250px;
+        overflow: hidden;
+        height: 200px;
+        z-index: 9999;
+    }
+    #forkongithub a {
+        width: 250px;
+        position: absolute;
+        top: 60px;
+        left: -60px;
+        transform: rotate(-45deg);
+        -webkit-transform: rotate(-45deg);
+        -ms-transform: rotate(-45deg);
+        -moz-transform: rotate(-45deg);
+        -o-transform: rotate(-45deg);
+        box-shadow: 4px 4px 10px rgba(0,0,0,0.8);
+    }
+}

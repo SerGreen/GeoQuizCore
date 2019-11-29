@@ -1,0 +1,46 @@
+﻿@model GeoQuizCore.Models.MenuIndexModalViewModel
+@using GeoQuizCore.Database.DatabaseClasses
+@using Microsoft.AspNetCore.Http
+@using Microsoft.AspNetCore.Mvc.Localization
+@using Microsoft.Extensions.Localization
+@inject IViewLocalizer Localizer
+@inject IStringLocalizer<SharedResources> Localization
+
+@{
+    //GeoDBDataContext db = new GeoDBDataContext();
+    string lang = Context.Session.GetString("Language")?.ToUpper();
+    string[] continents = { "EU", "AS", "AF" };     // There are no non-sovereign countries in Americas and Oceania
+    string[] continentNames = { Localization["europe"], Localization["asia"], Localization["africa"] };
+}
+
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h3 class="modal-title text-center">@Localization["non_sovereign_modal_caption"]</h3>
+        </div>
+        <div class="modal-body">
+            <div id="non-sovereign-list" class="row vdivide equal-height-children">
+                @for (int i = 0; i < continents.Length; i++)
+                {
+                    <div id="non-sovereign-@continents[i]" class="col-xs-4 non-sovereign-col">
+                        <h4 class="text-center">@continentNames[i]</h4>
+                        @foreach (Country c in Model.AllCountries.Where(x => x.Continent == continents[i]))
+                        {
+                            <div class="checkbox">
+                                <label>
+                                    <input @(Model.AllowedNonSovereignIds.Contains(c.Id) ? "checked" : null) type="checkbox" value="@c.Id">
+                                    @(c.Localizations.Where(x => x.Language == lang).Select(x => x.Name).FirstOrDefault() ?? c.Name)
+                                </label>
+                            </div>
+                        }
+                        <button id="select-all-btn-@continents[i]" class="btn btn-primary btn-sm bottomaligned" type="button">Derp</button>
+                    </div>
+                }
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-lg btn-primary" data-dismiss="modal" style="margin:0px 10px 10px">Ok</button>
+        </div>
+    </div>
+</div>

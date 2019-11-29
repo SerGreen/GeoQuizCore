@@ -1,0 +1,88 @@
+﻿@model GeoQuizCore.Models.QuestionViewModel
+@using Microsoft.AspNetCore.Http
+@using Microsoft.AspNetCore.Mvc.Localization
+@using Microsoft.Extensions.Localization
+@inject IViewLocalizer Localizer
+@inject IStringLocalizer<SharedResources> Localization
+
+@{
+    string mistakeText = null;
+    string mistake = TempData["Mistake"] as string;
+    if (mistake != null)
+    {
+        mistakeText = mistake == "Timeout"
+            ? Localization["mistake_timeout"]
+            : Localization["mistake_wrong_capital"] + $" {mistake}";
+    }
+
+    double columns = 0, rows = 0;
+    int currentChoice = 0;
+
+    if (Model.Question != null)
+    {
+        // Caclulate grid size for answer choices
+        int maxColumns = 3; // Request.Browser.ScreenPixelsWidth >= 1200 ? 3 : Request.Browser.ScreenPixelsWidth >= 992 ? 2 : 1;
+        double sqrt = Math.Sqrt(Model.Question.Choices.Length);
+        columns = Math.Min(maxColumns, Math.Ceiling(sqrt));
+        rows = Math.Ceiling(Model.Question.Choices.Length / columns);
+    }
+
+    bool gameOver = Model.Index >= Model.TotalQuestionsCount;
+}
+
+@if (!gameOver)
+{
+    <h2 class="text-center">@(Model.Question.Choices.Length > 1 ? Localization["select_capital_of"] : Localization["enter_capital_of"]) <span style="font-weight:bolder">@Model.Question.QuestionString</span></h2>
+    <hr />
+
+    if (Model.Question.Choices.Length > 1)
+    {
+        <div>
+            @for (int i = 0; i < rows; i++)
+            {
+                <div class="row text-center equal-height-children answer-option-row">
+                    @for (int j = 0; j < columns && currentChoice < Model.Question.Choices.Length; j++, currentChoice++)
+                    {
+                        <div class="col-xs-@(12 / columns) answer-option-text-outer">
+                            <div class="col-xs-12 hover-highlight answer-option-text" onclick='submitAnswerAjax(@Model.Index, "@Model.Question.Choices[currentChoice]")'>
+                                @(Model.Question.Choices[currentChoice])
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="col-xs-offset-1 col-xs-10">
+            <div class="form-group is-empty">
+                <div class="input-group">
+                    <span class="input-group-addon noselect" unselectable="on"><i class="material-icons">create</i></span>
+                    <input id="answer-input" class="form-control" placeholder="@Localization["type_here_hint"]" type="text">
+                    <span class="input-group-btn">
+                        <button id="submit-answer-btn" type="button" class="btn btn-fab btn-fab-mini" onclick="submitAnswerBtnClick()">
+                            <i class="material-icons" style="padding-left:2px;color:#555">send</i>
+                        </button>
+                    </span>
+                </div>
+            </div>
+        </div>
+    }
+}
+else
+{
+    <div class="vcenter-parent"><div id="loading" class="col-xs-offset-4 col-xs-4 vcenter-this" style="transition:all 1s linear;opacity:0"></div></div>
+    <div hidden id="game-over"></div>
+}
+
+<div hidden id="questionIndex">@(gameOver ? Model.Index - 1 : Model.Index)</div>
+<div hidden id="correctAnswers">@Model.CorrectAnswers</div>
+<div hidden id="wrongAnswers">@Model.WrongAnswers</div>
+<div hidden id="correctStreak">@Model.CorrectStreak</div>
+<div hidden id="reward">@Model.PointsReward</div>
+@if (mistakeText != null)
+{
+    <div hidden id="mistake">@mistakeText</div>
+}
+

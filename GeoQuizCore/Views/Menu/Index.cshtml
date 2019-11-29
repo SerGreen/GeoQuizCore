@@ -1,0 +1,278 @@
+﻿@model GeoQuizCore.Models.MenuIndexViewModel
+@using GeoQuizCore.Models.Shared
+@using Microsoft.AspNetCore.Http
+@using Microsoft.AspNetCore.Mvc.Localization
+@using Microsoft.Extensions.Localization
+@inject IViewLocalizer Localizer
+@inject IStringLocalizer<SharedResources> Localization
+
+@{
+    //var all = Localization.GetAllStrings().ToList();
+
+    ViewBag.Title = "GeoQuiz";
+    GeoQuizCore.Models.GameSettings settings = Model.Settings;
+    string[] allContinents = { "NA", "SA", "EU", "AS", "AF", "AU" };
+    string[] ContinentNames = { Localization["north_america"], Localization["south_america"], Localization["europe"], Localization["asia"], Localization["africa"], Localization["australia"] };
+    int[] timeLimits = { 5, 10, 20, 0 };
+    int[] answerOptions = { 3, 5, 11, 0 };
+    Difficulty[] difficulties = { Difficulty.Easy, Difficulty.Medium, Difficulty.Hard, Difficulty.VeryHard };
+    char[] difficultySymbols = { '⚀', '⚂', '⚄', '⚅' };
+}
+
+<script>
+    $(document).ready(function () {
+        $('.btn-hover-highlight').hover(function () {
+            $(this).removeClass('btn-default');
+            $(this).addClass('btn-primary');
+        }, function () {
+            $(this).removeClass('btn-primary');
+            $(this).addClass('btn-default');
+        })
+    });
+</script>
+
+<div class="equal-height-children">
+    <div class="col-xs-9 col-md-8">
+        <!-- Left top well -->
+        <div class="well col-xs-12 text-center">
+            <h2 class="text-muted text-uppercase">@Localization["start_new_game"]</h2>
+            <hr />
+
+            <div class="combined-button col-xs-12 col-md-offset-1 col-md-10 col-lg-offset-2 col-lg-8">
+                <button id="start-button" type="button" class="btn btn-lg btn-primary btn-raised" onclick="startNewGame()">
+                    <span>❬&nbsp;</span> @Localization["start_btn"] <span>&nbsp;❭</span>
+                </button>
+                <div class="btn-group-justified btn-group" data-toggle="buttons" id="gameMode">
+                    <label onchange="switchGameMode()" onclick="radioButtonHighlight(this)" class="btn btn-lg btn-default btn-raised @(settings.GameMode == GameMode.FlagByCountry ? "active btn-primary" : "")">
+                        <input name="gameMode" value="@GameMode.FlagByCountry" type="radio">@Localization["game_mode_btn_flags"]
+                    </label>
+                    <label onchange="switchGameMode()" onclick="radioButtonHighlight(this)" class="btn btn-lg btn-default btn-raised @(settings.GameMode == GameMode.CountryByFlag? "active btn-primary" : "")">
+                        <input name="gameMode" value="@GameMode.CountryByFlag" type="radio">@Localization["game_mode_btn_countries"]
+                    </label>
+                    <label onchange="switchGameMode()" onclick="radioButtonHighlight(this)" class="btn btn-lg btn-default btn-raised @(settings.GameMode == GameMode.CapitalByCountry ? "active btn-primary" : "")">
+                        <input name="gameMode" value="@GameMode.CapitalByCountry" type="radio">@Localization["game_mode_btn_capitals"]
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <!-- Left bottom well -->
+        <div class="well col-xs-12 text-center">
+            <div class="col-xs-4">
+                <h4 class="text-muted">@(Html.Raw(string.Format(Localization["time_limit_br"], "<br class='visible-xs'/>")))</h4>
+                <div class="radio-button-group btn-group btn-group-justified" data-toggle="buttons" id="timeLimit">
+                    @for (int i = 0; i < timeLimits.Length; i++)
+                    {
+                        <label onclick="radioButtonHighlight(this)" class="btn btn-default btn-raised @(timeLimits[i] == settings.TimeLimit ? "active btn-primary" : "")">
+                            <input name="timeLimit" value="@timeLimits[i]" type="radio" />
+                            @if (timeLimits[i] == 0)
+                            {
+                                <div class="bigger-symbol">∞</div>
+                            }
+                            else
+                            {
+                                <span>@timeLimits[i]<span class="visible-md">s</span></span>
+                            }
+                        </label>
+                    }
+                </div>
+            </div>
+            <div class="col-xs-4">
+                <h4 class="text-muted">@(Html.Raw(string.Format(Localization["answer_options_br"], "<br class='visible-xs'/>")))</h4>
+                <div class="radio-button-group btn-group btn-group-justified" data-toggle="buttons" id="answerOptions">
+                    @for (int i = 0; i < answerOptions.Length; i++)
+                    {
+                        <label onclick="radioButtonHighlight(this)" class="btn btn-default btn-raised @(answerOptions[i] == settings.DistractorsAmount ? "active btn-primary" : null) @(answerOptions[i] == 0 && settings.GameMode == GameMode.FlagByCountry ? "disabled" : null)" @(answerOptions[i] == 0 ? "id=pencil" : null)>
+                            <input name="answerOptions" value="@answerOptions[i]" type="radio">
+                            @if (answerOptions[i] == 0)
+                            {
+                                <span class="glyphicon glyphicon-pencil"></span>
+                            }
+                            else
+                            {
+                                @(answerOptions[i] + 1)
+                            }
+                        </label>
+                    }
+                </div>
+            </div>
+            <div class="col-xs-4">
+                <h4 class="text-muted">@(Html.Raw(string.Format(Localization["difficulty_br"], "<br class='visible-xs'/>")))</h4>
+                <div class="radio-button-group btn-group btn-group-justified" data-toggle="buttons" id="difficulty">
+                    @for (int i = 0; i < difficulties.Length; i++)
+                    {
+                        <label onclick="radioButtonHighlight(this)" class="btn btn-default btn-raised @(difficulties[i] == settings.Difficulty ? "active btn-primary" : "")">
+                            <input name="difficulty" value="@difficulties[i]" type="radio">
+                            <div class="bigger-symbol">@difficultySymbols[i]</div>
+                        </label>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Right well -->
+    <div class="well col-md-offset-1 col-xs-3">
+        <h4 class="text-muted text-center">@Localization["continents"]</h4>
+        <hr />
+        <div id="continents">
+            @for (int i = 0; i < allContinents.Length; i++)
+            {
+                <div class="checkbox">
+                    <label>
+                        <input @(settings.Continents.Contains(allContinents[i]) ? "checked" : null) type="checkbox" value="@allContinents[i]">
+                        @ContinentNames[i]
+                    </label>
+                </div>
+            }
+        </div>
+        <button id="select-all-btn-continents" class="btn btn-sm btn-primary btn-raised btn-block" type="button">Derp</button>
+        <hr />
+
+        <div class="center-div"><button type="button" class="btn btn-sm btn-primary btn-raised btn-block" data-toggle="modal" data-target="#allowed-countries" style="white-space:normal">@Localization["non_sovereign_btn"]</button></div>
+    </div>
+</div>
+
+<!-- Modals -->
+<div id="allowed-countries" class="modal fade" tabindex="-1" style="display: none">
+    @Html.Partial("PartialNonSovereignModal", Model.ModalViewModel)
+</div>
+
+<!-- Scripts -->
+<script>
+    // Workaround for Bootstrap's issue
+    $('.btn-group .btn').click(function (event) {
+        if ($(this).hasClass('disabled'))
+            event.stopPropagation();
+    });
+
+    // Active button highlight for radio group
+    function radioButtonHighlight(button) {
+        if (button && !$(button).hasClass('disabled')) {
+            $(button).siblings().removeClass('btn-primary');
+            $(button).addClass('btn-primary');
+        }
+    }
+
+    // Activation and deactivation of 'no answer options (type in)' button
+    // This setting is not available in Flag by Country mode
+    function switchGameMode() {
+        var pencil = $('#pencil');
+        if ($('#gameMode .active input').val() == '@GameMode.FlagByCountry') {
+            if (pencil.hasClass('active'))
+                pencil.siblings().last().click();
+            pencil.addClass('disabled');
+        }
+        else
+            pencil.removeClass('disabled');
+    }
+
+    // Save settings and start new game function
+    function startNewGame() {
+        var continents = [];
+        $('#continents div label input').each(function () {
+            if ($(this).is(':checked'))
+                continents.push($(this).val());
+        });
+
+        // Check if any continent is selected
+        // If not => draw attention to continents checkboxes
+        if (continents.length == 0)
+            noticeMeSenpai();
+        // Else start the game
+        else {
+            var allowedIds = [];
+            $('#non-sovereign-list div div label input').each(function () {
+                if ($(this).is(':checked'))
+                    allowedIds.push($(this).val());
+            });
+
+            var settings = {
+                GameMode: $('#gameMode label.active input').val(),
+                Difficulty: $('#difficulty label.active input').val(),
+                DistractorsAmount: $('#answerOptions label.active input').val(),
+                TimeLimit: $('#timeLimit label.active input').val(),
+                AllowedNonSovereignIds: allowedIds,
+                Continents: continents
+            };
+
+            $.ajax({
+                type: 'POST',
+                data: settings,
+                url: '@Url.Action(nameof(MenuController.SaveGameSettings), MenuController.Nameof)',
+                success: function () {
+                    window.location.href = '@Url.Action(nameof(QuizController.Index), QuizController.Nameof, new { lang = Context.Session.GetString("Language") })';
+                }
+            });
+        }
+    }
+</script>
+
+<!-- Select/deselect all checkboxes button script -->
+<script>
+    // Attention drawer to continents checkboxes
+    function noticeMeSenpai() {
+        continentsCheckboxes = $('#continents .checkbox label input');
+        // I can't believe it, but this actually does not work with the for loop. Wow.
+        var delay = 50;
+        continentsCheckboxes[0].focus();
+        setTimeout(function () { continentsCheckboxes[1].focus() }, delay);
+        setTimeout(function () { continentsCheckboxes[2].focus() }, delay * 2);
+        setTimeout(function () { continentsCheckboxes[3].focus() }, delay * 3);
+        setTimeout(function () { continentsCheckboxes[4].focus() }, delay * 4);
+        setTimeout(function () { continentsCheckboxes[5].focus() }, delay * 5);
+    };
+
+    // Check if all checkboxes in a group are checked
+    function areAllCheckboxesOn(checkboxes) {
+        var countChecked = 0;
+        checkboxes.each(function () {
+            if ($(this).is(':checked'))
+                countChecked++;
+        });
+        return countChecked == checkboxes.length;
+    }
+    // Set button text/icon depending on checkboxes state
+    function setSelectAllBtnText(button, checkboxes, buttonIcon = false) {
+        if (buttonIcon) {
+            if (areAllCheckboxesOn(checkboxes))
+                button.find('img').attr('src', '/img/deselect-all.svg');
+            else
+                button.find('img').attr('src', '/img/select-all.svg');
+        }
+        else {
+            if (areAllCheckboxesOn(checkboxes))
+                button.text('@Localization["deselect_all_btn"]');
+            else
+                button.text('@Localization["select_all_btn"]');
+        }
+    }
+    // Function to register all event handlers for select/deselect all checkboxes
+    function setupSelectAllCheckboxes(button, checkbxes, buttonIcon = false) {
+        checkbxes.each(function () {
+            $(this).parent().click(function () {
+                setSelectAllBtnText(button, checkbxes, buttonIcon);
+            });
+        });
+
+        button.click(function () {
+            var allOn = areAllCheckboxesOn(checkbxes);
+            checkbxes.each(function () {
+                if (allOn)
+                    $(this).prop('checked', false);
+                else
+                    $(this).prop('checked', true);
+            });
+            setSelectAllBtnText(button, checkbxes, buttonIcon);
+        });
+
+        setSelectAllBtnText(button, checkbxes, buttonIcon);
+    }
+
+    $(document).ready(function () {
+        setupSelectAllCheckboxes($('#select-all-btn-continents'), $('#continents .checkbox label input'), false);
+        setupSelectAllCheckboxes($('#select-all-btn-EU'), $('#non-sovereign-EU .checkbox label input'));
+        setupSelectAllCheckboxes($('#select-all-btn-AS'), $('#non-sovereign-AS .checkbox label input'));
+        setupSelectAllCheckboxes($('#select-all-btn-AF'), $('#non-sovereign-AF .checkbox label input'));
+    });
+</script>

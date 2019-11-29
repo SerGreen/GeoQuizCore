@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8"?><Database Name="GeoDB" Class="GeoDBDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
+  <Connection Mode="WebSettings" ConnectionString="Data Source=(localdb)\MSSQLLocalDb;AttachDbFilename=|DataDirectory|\GeoDB.mdf;Initial Catalog=GeoDB;Integrated Security=True" SettingsObjectName="System.Configuration.ConfigurationManager.ConnectionStrings" SettingsPropertyName="GeoDBConnectionString" Provider="System.Data.SqlClient" />
+  <Table Name="dbo.Countries" Member="Countries">
+    <Type Name="Country">
+      <Column Name="Id" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="Name" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="Capital" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="Continent" Type="System.String" DbType="NVarChar(10) NOT NULL" CanBeNull="false" />
+      <Column Name="IsSovereign" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Association Name="Country_FlagNeighbour" Member="FlagNeighbours" ThisKey="Id" OtherKey="CountryId1" Type="FlagNeighbour" />
+      <Association Name="Country_FlagNeighbour1" Member="FlagNeighbours1" ThisKey="Id" OtherKey="CountryId2" Type="FlagNeighbour" />
+      <Association Name="Country_Localization" Member="Localizations" ThisKey="Id" OtherKey="CountryId" Type="Localization" />
+    </Type>
+  </Table>
+  <Table Name="dbo.FlagNeighbours" Member="FlagNeighbours">
+    <Type Name="FlagNeighbour">
+      <Column Name="Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="CountryId1" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="CountryId2" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Distance" Type="System.Double" DbType="Float NOT NULL" CanBeNull="false" />
+      <Association Name="Country_FlagNeighbour" Member="Country" ThisKey="CountryId1" OtherKey="Id" Type="Country" IsForeignKey="true" />
+      <Association Name="Country_FlagNeighbour1" Member="Country1" ThisKey="CountryId2" OtherKey="Id" Type="Country" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Localization" Member="Localizations">
+    <Type Name="Localization">
+      <Column Name="Language" Type="System.String" DbType="Char(2) NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="CountryId" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="Name" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="Capital" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="AliasName" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Association Name="Country_Localization" Member="Country" ThisKey="CountryId" OtherKey="Id" Type="Country" IsForeignKey="true" />
+    </Type>
+  </Table>
+</Database>
